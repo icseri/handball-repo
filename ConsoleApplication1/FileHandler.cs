@@ -10,16 +10,32 @@ namespace ConsoleApplication1
     static class FileHandler
     {
         const string SubFileName = "subs.txt";
+        const string PlayersFileName = "players.txt";
 
-        public static Player[] CreatePlayers()
+        public static Player[] ReadPlayers()
         {
-            Player[] players = new Player[10];
-            for (int i = 0; i < 10; i++)
+            var data = File.ReadAllLines(PlayersFileName);
+            var numberOfPlayers = int.Parse(data[0].Substring(2));
+            string[] line = data[1].Substring(2).Split(',');
+            int[] startPlayers = new int[line.Length];
+            for (int i = 0; i < startPlayers.Length; i++)
+            {
+                startPlayers[i] = int.Parse(line[i]);
+            }
+            var players = new Player[numberOfPlayers];
+            for (int i = 0; i < numberOfPlayers; i++)
             {
                 players[i] = new Player();
                 players[i].Number = i + 1;
+                for (int j = 0; j < startPlayers.Length; j++)
+                {
+                    if (startPlayers[j] == players[i].Number)
+                        players[i].IsOnPitch = true;                  
+                }
             }
             return players;
+
+
         }
 
 
